@@ -25,10 +25,14 @@
     "require": {
         "php": "~5.5.0|~5.6.0|~7.0.0",
         "magento/framework": "100.*",
-        "magento/base": "2.*"
+        "magento/module-payment": "100.*",
+        "magento/module-sales": "100.*",
+        "mygento/base": "2.*"
     },
     "require-dev": {
-        "mygento/coding-standard": "2.*"
+        "mygento/coding-standard": "2.*",
+        "jakub-onderka/php-parallel-lint": "^0.9.2",
+        "jakub-onderka/php-console-highlighter": "^0.3.2"
     },
     "autoload": {
         "files": [ "registration.php" ],
