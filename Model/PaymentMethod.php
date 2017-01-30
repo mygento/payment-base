@@ -9,7 +9,7 @@ namespace Mygento\Payment\Model;
 
 use Magento\Quote\Api\Data\CartInterface;
 
-abstract class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
+class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
 {
     /**
      * Payment Method feature
@@ -30,7 +30,7 @@ abstract class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMetho
      *
      * @var bool
      */
-    protected $_canRefund = true;
+    protected $_canRefund = false;
 
     /**
      * Payment Method feature
