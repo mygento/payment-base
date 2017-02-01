@@ -16,7 +16,7 @@ class Data extends \Mygento\Base\Helper\Data
 {
     /* @var string */
 
-    protected $code = 'payment';
+    protected $_code = 'payment';
 
     public function __construct(
         \Magento\Sales\Model\OrderFactory $orderFactory,
@@ -55,7 +55,7 @@ class Data extends \Mygento\Base\Helper\Data
      */
     public function getConfig($path)
     {
-        return parent::getConfig('payment/' . $this->code . '/' . $path);
+        return parent::getConfig('payment/' . $this->_code . '/' . $path);
     }
 
     /**
