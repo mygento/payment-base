@@ -36,4 +36,9 @@ class Info extends \Magento\Payment\Block\Info
     {
         return $this->_helper->getLink($this->getOrder()->getId());
     }
+
+    public function getCode()
+    {
+        return $this->_helper->getCode();
+    }
 }

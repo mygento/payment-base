@@ -21,26 +21,18 @@ class Redirect extends \Magento\Payment\Block\Form
     protected $_helper;
 
     /**
-     * @var \Magento\Checkout\Model\Session
-     */
-    protected $_checkoutSession;
-
-    /**
      *
      * @param \Mygento\Payment\Helper\Data $helper
-     * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param array $data
      */
     public function __construct(
         \Mygento\Payment\Helper\Data $helper,
-        \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Framework\View\Element\Template\Context $context,
         array $data = []
     ) {
         parent::__construct($context, $data);
         $this->_helper = $helper;
-        $this->_checkoutSession = $checkoutSession;
     }
 
     /**
@@ -50,5 +42,10 @@ class Redirect extends \Magento\Payment\Block\Form
     public function getPlaceUrl()
     {
         return '';
+    }
+
+    public function getCode()
+    {
+        return $this->_helper->getCode();
     }
 }

@@ -58,6 +58,16 @@ class Data extends \Mygento\Base\Helper\Data
         return parent::getConfig('payment/' . $this->_code . '/' . $path);
     }
 
+
+    /**
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->_code;
+    }
+
     /**
      *
      * @param integer $orderId

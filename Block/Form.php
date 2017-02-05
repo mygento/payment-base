@@ -24,7 +24,7 @@ class Form extends \Magento\Payment\Block\Form
      *
      * @var string
      */
-    protected $_template = 'Mygento_Payment::form/payment.phtml';
+    protected $_template = 'Mygento_Payment::form/form.phtml';
 
     /**
      *
