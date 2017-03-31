@@ -41,4 +41,12 @@ class Info extends \Magento\Payment\Block\Info
     {
         return $this->_helper->getCode();
     }
+    
+    public function isPaid()
+    {
+        if (!$this->getOrder()->hasInvoices()) {
+            return false;
+        }
+        return true;
+    }
 }
