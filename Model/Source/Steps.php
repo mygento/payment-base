@@ -17,8 +17,8 @@ class Steps implements \Magento\Framework\Option\ArrayInterface
     public function toOptionArray()
     {
         return [
-            ['value' => 1, 'label' => 'One-step'],
-            ['value' => 2, 'label' => 'Two-step']
+            ['value' => 1, 'label' => __('One-step')],
+            ['value' => 2, 'label' => __('Two-step')]
         ];
     }
 }
