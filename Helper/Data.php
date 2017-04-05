@@ -115,4 +115,9 @@ class Data extends \Mygento\Base\Helper\Data
             ->addObject($invoice->getOrder())
             ->save();
     }
+
+    public function genHash($orderId)
+    {
+        return strtr(base64_encode(microtime() . $orderId . rand(1, 1048576)), '+/=', '-_,');
+    }
 }

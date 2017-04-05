@@ -5,6 +5,15 @@
  * @package Mygento_Payment
  */
 ?>
-<dl class="payment-method <?php echo $block->getCode();?>">
+<dl class="payment-method <?php echo $block->getCode(); ?>">
     <dt class="title"><?php echo $block->escapeHtml($block->getMethod()->getTitle()) ?></dt>
 </dl>
+<p>
+    <?php if (!$this->isPaid()): ?>
+        <a target="_blank" href="<?php echo $block->getPaylink(); ?>">
+            <?php echo $block->escapeHtml(__('Pay order')); ?>
+        </a>
+    <?php else: ?>
+        <?php echo $block->escapeHtml(__('Order is paid')); ?>
+    <?php endif; ?>
+</p>
