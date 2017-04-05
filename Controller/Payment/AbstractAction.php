@@ -28,7 +28,7 @@ abstract class AbstractAction extends \Magento\Framework\App\Action\Action
         \Magento\Framework\View\Result\LayoutFactory $resultLayoutFactory,
         \Magento\Framework\App\Action\Context $context
     ) {
-    
+
         parent::__construct($context);
         $this->_helper = $helper;
         $this->_orderFactory = $orderFactory;

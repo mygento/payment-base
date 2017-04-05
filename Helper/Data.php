@@ -85,7 +85,7 @@ class Data extends \Mygento\Base\Helper\Data
             );
         }
 
-        if (strpos($order->getPayment()->getMethodInstance()->getCode(), $this->code) === false
+        if (strpos($order->getPayment()->getMethodInstance()->getCode(), $this->getCode()) === false
         ) {
             throw new LocalizedException(
                 __('The order method is not belonging to desired payment method')
