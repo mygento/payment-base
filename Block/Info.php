@@ -50,5 +50,4 @@ class Info extends \Magento\Payment\Block\Info
         }
         return false;
     }
-
 }
