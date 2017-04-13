@@ -1,0 +1,20 @@
+<?php
+/**
+ * @author Mygento
+ * @copyright See COPYING.txt for license details.
+ * @package Mygento_Payment
+ */
+$instructions = $block->getInstructions();
+?>
+<?php if ($instructions): ?>
+    <?php $methodCode = $block->escapeHtml($block->getMethodCode()); ?>
+    <div class="items <?php /* @noEscape */
+    echo $methodCode
+    ?> instructions agreement" id="payment_form_<?php /* @noEscape */
+    echo $methodCode
+    ?>" style="display: none;">
+        <?php /* @noEscape */
+        echo nl2br($block->escapeHtml($instructions))
+        ?>
+    </div>
+<?php endif;

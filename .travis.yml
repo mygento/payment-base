@@ -1,0 +1,22 @@
+language: php
+php:
+- 5.5
+- 5.6
+- 7.0
+matrix:
+  allow_failures:
+  - php: hhvm
+before_script:
+- composer self-update
+- echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USERNAME}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}" > auth.json
+- phpenv config-rm xdebug.ini
+- composer install --no-interaction --prefer-dist
+- php vendor/bin/phpcs --config-set ignore_warnings_on_exit 1
+script:
+- php vendor/bin/parallel-lint --exclude vendor .
+- php vendor/bin/phpcs --standard=vendor/mygento/coding-standard/Mygento-Mage2 .
+- php vendor/bin/phpmd . text cleancode,codesize,design,naming,unusedcode vendor/mygento/coding-standard/Mygento-Mage2/phpmd.xml --exclude vendor
+env:
+  global:
+  - secure: q0ZNOqAofKEl/SeXNJSXWd9dyo+Xekoj5X+tgNiT8ehdKaCCJnWs2JorzDXBvEhMfHKb29LeVrmIs5cGCW10JMIsx6yli/QDBjO3T9yQDotuhKhHr6DqLQdaH1MsidRyhLwChLi5kdJFoLJfQJeCmsRPZo35WiA6B5dVud9Ir3vyDOQdS2CxrzThaaAH7ZxI6imHydPL7aqGOIYO1q7rCnoZ1SQWC1ItIOv9Ps/jRpA74mGC5OmevGpLd9cVM0MSKdewRCPTEdTqNNqhqjnH/dyIqJ9TEvfjVI3hK/GmnznTQ9i6D8qZdxPBa37CGg9up1Ok5zGuWES8SeBa23i/lDQ1Zoksb3pgwAGueVr+/djQFfLNjeFdWcco+1GjxmNSovOCKg839ZCtmhgiu3H7HHD68/JiEd9g7q4jCbdlJ5e4Vy7qSDRJmvjryIejbc7DQZ+fYv3GcjiR3CnQ6XyEnwEZ9bUzrBxKILito7TBzwze3x9niPfB1HPuK1Bu/cFm2iFQZS4EoNq2ldJOjbCc5bhLkK8DM/Is0rEXIF9fTBrzQYozAp2h+Jv9WIeYqR+gT+DhugjEbXEuZ+z49O2YkWNgLUnhiUi8/4ao/Xi3Gpk1QFvaHgm30Wrdz7IvJqa3DBaI34oo+MODzPHW68TDxTwQ95lUZEsr1W05CwnJFLM=
+  - secure: aRw0BCnguut3uCNh1oKnIoqFS/UYrMhMc0IC9jkWh7FiyJYGmYl9BD7y8zU2DjaakVazbO44G8Q23vzLhvE7nRUWeXm3Xxfg5ioj2nCSFWgx9fzPgj4Lu6XH7FIcT/XomhX0KxF/iQ03M86Rf/gMptNgV8PlEjaUBVo6ZlgY1bQVyFV4W9zTXck0gkYM3qAI2rx1GqDhf4WKXujJjpVgc9EK0M0GvFygPVac6p9vmoXguABnc+uzQfUQF3NMSaGjmT8mo9bmRCFH+JhDbZxHIkAGv/CkH0cZoS/BhifyyN+hmYh19KYnbQrnURcqRXgjJhjNs+xngBPWgxGLtw/VMFTD9i6fthyEONI6VJGUfSPjzFytADvZ/+GPUbpstkQowY0nQCgq+/jN8M/qHiN2Zt9rYGoTLL1M5B+cjpacOuabNb9r5AXJPdvNUoaqMI62I3od5Ut9u9dw5MB4A7AQIjtDG0zu0bqGwyF0P8+S+SJGs25bTqkB8T6NE35gtBrKduA0Mxvp/OlcbnBc4SKvr+4b/PfK9FE12Hwlxqxxd47/e20NoNh7QB8vpeFdwiZipABM6zQBIjmtzN4i3UBDNAoC5EkZKAmJX4m47pdr7i8pAy9ZB0gGubTa0noKrtbUnk2/7oP/F/94HZj/2aDbaaE/ga4sOcLZ9lrU5DXC290=
