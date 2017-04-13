@@ -9,6 +9,11 @@ namespace Mygento\Payment\Model;
 
 use Magento\Quote\Api\Data\CartInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+ */
 class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
 {
     /**
@@ -69,7 +74,7 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
         \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory,
-        \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory,
+        \Magento\Framework\Api\AttributeValueFactory $attributeFactory,
         \Magento\Payment\Helper\Data $paymentData,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Payment\Model\Method\Logger $logger,
@@ -81,7 +86,7 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
             $context,
             $registry,
             $extensionFactory,
-            $customAttributeFactory,
+            $attributeFactory,
             $paymentData,
             $scopeConfig,
             $logger,

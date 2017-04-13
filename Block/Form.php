@@ -57,10 +57,7 @@ class Form extends \Magento\Payment\Block\Form
      */
     public function getInstructions()
     {
-        $this->_helper->addLog(get_class($this->getMethod()));
         if ($this->_instructions === null) {
-            /** @var \Magento\Payment\Model\Method\AbstractMethod $method */
-            $method = $this->getMethod();
             $this->_instructions = $this->_helper->getConfig('instructions');
         }
         return $this->_instructions;

@@ -42,6 +42,7 @@ class Data extends \Mygento\Base\Helper\Data
      *
      * @param type $orderId
      * @return string
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function getLink($orderId)
     {
@@ -57,7 +58,6 @@ class Data extends \Mygento\Base\Helper\Data
     {
         return parent::getConfig('payment/' . $this->_code . '/' . $path);
     }
-
 
     /**
      *
