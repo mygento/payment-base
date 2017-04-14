@@ -109,8 +109,8 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
     public function initialize($paymentAction, $stateObject)
     {
         $state = $this->getConfigData('order_status');
-        $stateObject->setState($state);
-        $stateObject->setStatus($state);
+        $stateObject->setState(Order::STATE_PENDING_PAYMENT);
+        $stateObject->setStatus(Order::STATE_PENDING_PAYMENT);
         $stateObject->setIsNotified(false);
     }
 
