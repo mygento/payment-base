@@ -61,15 +61,6 @@ class Data extends \Mygento\Base\Helper\Data
 
     /**
      *
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->_code;
-    }
-
-    /**
-     *
      * @param integer $orderId
      * @throws \Magento\Framework\Exception\LocalizedException
      */
