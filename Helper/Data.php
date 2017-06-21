@@ -64,11 +64,10 @@ class Data extends \Mygento\Base\Helper\Data
      * @param integer $orderId
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function addOrderTransaction($orderId)
+    public function addOrderTransaction($orderId, $secondStep = true, $transactionId = null, $transactionData = null)
     {
         $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
-        $this->addLog('Will add transaction to order ID:' . $order->getId() .
-            ' INC_ID:' . $orderId);
+        $this->addLog('Will add transaction to order ID:' . $order->getId() .' INC_ID:' . $orderId);
 
         if (!$order->canInvoice()) {
             throw new LocalizedException(
@@ -76,8 +75,7 @@ class Data extends \Mygento\Base\Helper\Data
             );
         }
 
-        if (strpos($order->getPayment()->getMethodInstance()->getCode(), $this->getCode()) === false
-        ) {
+        if (strpos($order->getPayment()->getMethodInstance()->getCode(), $this->getCode()) === false) {
             throw new LocalizedException(
                 __('The order method is not belonging to desired payment method')
             );
@@ -95,10 +93,27 @@ class Data extends \Mygento\Base\Helper\Data
             );
         }
 
+        if($secondStep) {
+            $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
+        }
         $invoice->register();
 
         $invoice->getOrder()->setCustomerNoteNotify(true);
         $invoice->getOrder()->setIsInProcess(true);
+
+        if($transactionId) {
+            $payment = $order->getPayment();
+            $payment->setTransactionId($transactionId);
+            $payment->setIsTransactionClosed($secondStep);
+
+            $transaction = $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE, $invoice, true);
+            $transaction->setAdditionalInformation(
+                \Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS,
+                $transactionData
+            );
+            $transaction->save();
+            $payment->addTransactionCommentsToOrder($transaction, __('Recieved payment from customer'));
+        }
 
         /** @var \Magento\Framework\DB\Transaction $transaction */
         $transaction = $this->_transactionFactory->create();
