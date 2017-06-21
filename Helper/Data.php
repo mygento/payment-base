@@ -8,6 +8,7 @@
 namespace Mygento\Payment\Helper;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Sales\Model\Order\Payment\Transaction;
 
 /**
  * Payment Data helper
@@ -27,6 +28,7 @@ class Data extends \Mygento\Base\Helper\Data
         \Magento\Framework\Encryption\Encryptor $encryptor,
         \Magento\Framework\HTTP\Client\Curl $curl
     ) {
+
         parent::__construct(
             $context,
             $loggerFactory,
@@ -64,18 +66,24 @@ class Data extends \Mygento\Base\Helper\Data
      * @param integer $orderId
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function addOrderTransaction($orderId, $secondStep = true, $transactionId = null, $transactionData = null)
-    {
+    public function addOrderTransaction(
+        $orderId,
+        $secondStep = true,
+        $transactionId = null,
+        $transactionData = null
+    ) {
+
         $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
-        $this->addLog('Will add transaction to order ID:' . $order->getId() .' INC_ID:' . $orderId);
+        $this->addLog('Will add transaction to orderID:' . $order->getId()
+                      . ' INC_ID:' . $orderId);
 
         if (!$order->canInvoice()) {
             throw new LocalizedException(
                 __('The order does not allow an invoice to be created.')
             );
         }
-
-        if (strpos($order->getPayment()->getMethodInstance()->getCode(), $this->getCode()) === false) {
+        $payment = $order->getPayment();
+        if (strpos($payment->getMethodInstance()->getCode(), $this->getCode()) === false) {
             throw new LocalizedException(
                 __('The order method is not belonging to desired payment method')
             );
@@ -93,7 +101,7 @@ class Data extends \Mygento\Base\Helper\Data
             );
         }
 
-        if($secondStep) {
+        if ($secondStep) {
             $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
         }
         $invoice->register();
@@ -101,18 +109,20 @@ class Data extends \Mygento\Base\Helper\Data
         $invoice->getOrder()->setCustomerNoteNotify(true);
         $invoice->getOrder()->setIsInProcess(true);
 
-        if($transactionId) {
-            $payment = $order->getPayment();
+        if ($transactionId) {
             $payment->setTransactionId($transactionId);
             $payment->setIsTransactionClosed($secondStep);
 
-            $transaction = $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE, $invoice, true);
+            $transaction = $payment->addTransaction(Transaction::TYPE_CAPTURE, $invoice, true);
             $transaction->setAdditionalInformation(
-                \Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS,
+                Transaction::RAW_DETAILS,
                 $transactionData
             );
             $transaction->save();
-            $payment->addTransactionCommentsToOrder($transaction, __('Recieved payment from customer'));
+            $payment->addTransactionCommentsToOrder(
+                $transaction,
+                __('Recieved payment from customer')
+            );
         }
 
         /** @var \Magento\Framework\DB\Transaction $transaction */
