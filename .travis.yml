@@ -1,11 +1,8 @@
 language: php
 php:
-- 5.5
 - 5.6
 - 7.0
-matrix:
-  allow_failures:
-  - php: hhvm
+
 before_script:
 - composer self-update
 - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USERNAME}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}" > auth.json
@@ -14,7 +11,7 @@ before_script:
 - php vendor/bin/phpcs --config-set ignore_warnings_on_exit 1
 script:
 - php vendor/bin/parallel-lint --exclude vendor .
-- php vendor/bin/phpcs --standard=vendor/mygento/coding-standard/Mygento-Mage2 .
+- php vendor/bin/phpcs .
 - php vendor/bin/phpmd . text cleancode,codesize,design,naming,unusedcode vendor/mygento/coding-standard/Mygento-Mage2/phpmd.xml --exclude vendor
 env:
   global:

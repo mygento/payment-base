@@ -62,20 +62,54 @@ class Data extends \Mygento\Base\Helper\Data
     }
 
     /**
+     * @param \Magento\Sales\Model\Order $order
+     * @param \Magento\Sales\Model\Order\Invoice|\Magento\Sales\Model\Order\CreditMemo $entity
+     * @param $transactionType
+     * @param bool $transactionIsPaid
+     * @param null $transactionId
+     * @param array $transactionData
+     */
+    public function addPaymentTransaction(
+        $order,
+        $entity,
+        $transactionType,
+        $transactionIsPaid = true,
+        $transactionId = null,
+        $transactionData = []
+    ) {
+        $this->addLog('Payment ransaction -> ' . $order->getIncrementId());
+        $payment = $order->getPayment();
+
+        $payment->setTransactionId($transactionId);
+        $payment->setIsTransactionClosed($transactionIsPaid);
+
+        $transaction = $payment->addTransaction($transactionType, $entity, true);
+        if (!empty($transactionData)) {
+            $transaction->setAdditionalInformation(
+                Transaction::RAW_DETAILS,
+                $transactionData
+            );
+        }
+        $transaction->save();
+        $payment->addTransactionCommentsToOrder(
+            $transaction,
+            __('Recieved payment from customer')
+        );
+    }
+
+    /**
      *
      * @param integer $orderId
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function addOrderTransaction(
         $orderId,
-        $secondStep = true,
-        $transactionId = null,
-        $transactionData = null
+        $isPaid = true
     ) {
 
         $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
         $this->addLog('Will add transaction to orderID:' . $order->getId()
-                      . ' INC_ID:' . $orderId);
+            . ' INC_ID:' . $orderId);
 
         if (!$order->canInvoice()) {
             throw new LocalizedException(
@@ -101,7 +135,7 @@ class Data extends \Mygento\Base\Helper\Data
             );
         }
 
-        if ($secondStep) {
+        if ($isPaid) {
             $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
         }
         $invoice->register();
@@ -109,27 +143,13 @@ class Data extends \Mygento\Base\Helper\Data
         $invoice->getOrder()->setCustomerNoteNotify(true);
         $invoice->getOrder()->setIsInProcess(true);
 
-        if ($transactionId) {
-            $payment->setTransactionId($transactionId);
-            $payment->setIsTransactionClosed($secondStep);
-
-            $transaction = $payment->addTransaction(Transaction::TYPE_CAPTURE, $invoice, true);
-            $transaction->setAdditionalInformation(
-                Transaction::RAW_DETAILS,
-                $transactionData
-            );
-            $transaction->save();
-            $payment->addTransactionCommentsToOrder(
-                $transaction,
-                __('Recieved payment from customer')
-            );
-        }
-
         /** @var \Magento\Framework\DB\Transaction $transaction */
         $transaction = $this->_transactionFactory->create();
         $transaction->addObject($invoice)
             ->addObject($invoice->getOrder())
             ->save();
+
+        return $invoice;
     }
 
     public function genHash($orderId)
