@@ -65,6 +65,9 @@ class Data extends \Mygento\Base\Helper\Data
     {
         $invoice = $this->getInvoice($orderId);
         $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
+        if($transactionId) {
+            $invoice->setTransactionId($transactionId);
+        }
         $invoice = $this->submitInvoice($invoice);
 
         if(!$invoice) {
@@ -82,6 +85,9 @@ class Data extends \Mygento\Base\Helper\Data
     public function proceedAuthorize($orderId, $transactionId, $transactionData)
     {
         $invoice = $this->getInvoice($orderId);
+        if($transactionId) {
+            $invoice->setTransactionId($transactionId);
+        }
         $invoice = $this->submitInvoice($invoice);
 
         if(!$invoice) {
