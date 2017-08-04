@@ -8,7 +8,7 @@
 
 namespace Mygento\Payment\Gateway\Config;
 
-class CanVoidHandler implements \Magento\Payment\Gateway\Config\ValueHandlerInterface
+class CanCaptureHandler implements \Magento\Payment\Gateway\Config\ValueHandlerInterface
 {
     /**
      * Retrieve method configured value
@@ -25,6 +25,6 @@ class CanVoidHandler implements \Magento\Payment\Gateway\Config\ValueHandlerInte
         if(!$payment) {
             return false;
         }
-        return $payment->getAuthorizationTransaction() && (bool)$payment->getAmountAuthorized() && !(bool)$payment->getAmountPaid();
+        return $payment->getAuthorizationTransaction() && (bool)$payment->getAmountAuthorized();
     }
 }

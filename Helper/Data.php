@@ -84,19 +84,8 @@ class Data extends \Mygento\Base\Helper\Data
 
     public function proceedAuthorize($orderId, $transactionId, $transactionData)
     {
-        $invoice = $this->getInvoice($orderId);
-        if($transactionId) {
-            $invoice->setTransactionId($transactionId);
-        }
-        $invoice = $this->submitInvoice($invoice);
-
-        if(!$invoice) {
-            return;
-        }
-
         $this->addAuthorizeTransaction(
-            $invoice->getOrder(),
-            $invoice,
+            $order = $this->_orderFactory->create()->loadByIncrementId($orderId),
             Transaction::TYPE_AUTH,
             $transactionId,
             $transactionData
@@ -140,14 +129,12 @@ class Data extends \Mygento\Base\Helper\Data
 
     /**
      * @param \Magento\Sales\Model\Order $order
-     * @param \Magento\Sales\Model\Order\Invoice|\Magento\Sales\Model\Order\CreditMemo $entity
      * @param $transactionType
      * @param null $transactionId
      * @param array $transactionData
      */
     protected function addAuthorizeTransaction(
         $order,
-        $entity,
         $transactionType,
         $transactionId = null,
         $transactionData = []
@@ -156,10 +143,15 @@ class Data extends \Mygento\Base\Helper\Data
         $this->addLog('Payment ransaction -> ' . $order->getIncrementId());
         $payment = $order->getPayment();
 
-        $payment->setTransactionId($transactionId);
-        $payment->setIsTransactionClosed(false);
+        $payment->setShouldCloseParentTransaction(false);
 
-        $transaction = $payment->addTransaction($transactionType, $entity, true);
+        $payment->setTransactionId($transactionId);
+        $payment->setLastTransId($transactionId);
+        $payment->setIsTransactionClosed(false);
+        $payment->setBaseAmountAuthorized($order->getBaseTotalDue());
+        $payment->setAmountAuthorized($order->getTotalDue());
+
+        $transaction = $payment->addTransaction($transactionType);
         if (!empty($transactionData)) {
             $transaction->setAdditionalInformation(
                 Transaction::RAW_DETAILS,
