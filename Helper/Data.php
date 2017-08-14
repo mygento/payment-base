@@ -7,6 +7,7 @@
 
 namespace Mygento\Payment\Helper;
 
+use Magento\Config\Model\Config\Backend\Design\Exception;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order\Payment\Transaction;
 
@@ -19,9 +20,32 @@ class Data extends \Mygento\Base\Helper\Data
 
     protected $_code = 'payment';
 
+    /**
+     * @var \Magento\Sales\Model\OrderFactory
+     */
+    protected $_orderFactory;
+
+    /**
+     * @var \Mygento\Payment\Helper\Transaction
+     */
+    protected $_transHelper;
+
+    /**
+     * @var \Magento\Framework\DB\TransactionFactory
+     */
+    protected $_transactionFactory;
+
+    /**
+     * @var \Magento\Sales\Model\Order\CreditmemoFactory
+     */
+    protected $_creditmemoFactory;
+
+
     public function __construct(
+        \Mygento\Payment\Helper\Transaction $transHelper,
         \Magento\Sales\Model\OrderFactory $orderFactory,
         \Magento\Framework\DB\TransactionFactory $transactionFactory,
+        \Magento\Sales\Model\Order\CreditmemoFactory $creditmemoFactory,
         \Magento\Framework\App\Helper\Context $context,
         \Mygento\Base\Model\Logger\LoggerFactory $loggerFactory,
         \Mygento\Base\Model\Logger\HandlerFactory $handlerFactory,
@@ -37,7 +61,9 @@ class Data extends \Mygento\Base\Helper\Data
             $curl
         );
         $this->_orderFactory = $orderFactory;
+        $this->_transHelper = $transHelper;
         $this->_transactionFactory = $transactionFactory;
+        $this->_creditmemoFactory = $creditmemoFactory;
     }
 
     /**
@@ -61,25 +87,12 @@ class Data extends \Mygento\Base\Helper\Data
         return parent::getConfig('payment/' . $this->_code . '/' . $path);
     }
 
-    public function proceedCapture($orderId, $transactionId, $transactionData)
+    public function proceedCapture($order, $transactionId, $amount, $transactionData)
     {
-        $invoice = $this->getInvoice($orderId);
-        $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
-        if($transactionId) {
-            $invoice->setTransactionId($transactionId);
-        }
-        $invoice = $this->submitInvoice($invoice);
-
-        if(!$invoice) {
-            return;
-        }
-        $this->addCaptureTransaction(
-            $invoice->getOrder(),
-            $invoice,
-            Transaction::TYPE_CAPTURE,
-            $transactionId,
-            $transactionData
-        );
+        $payment = $order->getPayment();
+        $payment->setTransactionId($transactionId);
+        $payment = $this->_transHelper->capture($payment, $amount, $transactionData);
+        $order->save();
     }
 
     public function proceedAuthorize($orderId, $transactionId, $transactionData)
@@ -216,6 +229,21 @@ class Data extends \Mygento\Base\Helper\Data
             ->save();
 
         return $invoice;
+    }
+
+
+    public function addOrderRefundTransaction($transactionId, $parentTransactionId, $order, $amount)
+    {
+        $payment = $order->getPayment();
+
+        $payment->setTransactionId($transactionId)
+                ->setParentTransactionId($parentTransactionId)
+                ->setIsTransactionClosed(true)
+        ;
+        $payment->registerRefundNotification($amount);
+
+        $payment->save();
+        $order->save();
     }
 
 
