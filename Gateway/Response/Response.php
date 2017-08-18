@@ -29,6 +29,7 @@ class Response implements \Magento\Payment\Gateway\Response\HandlerInterface
      *
      * @param array $handlingSubject
      * @param array $response
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @return void
      */
     public function handle(array $handlingSubject, array $response)

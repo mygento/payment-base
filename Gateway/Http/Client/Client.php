@@ -29,6 +29,9 @@ class Client implements \Magento\Payment\Gateway\Http\ClientInterface
         $this->_helper = $helper;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function placeRequest(\Magento\Payment\Gateway\Http\TransferInterface $transferObject)
     {
         return null;

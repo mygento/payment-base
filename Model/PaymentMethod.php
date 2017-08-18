@@ -3,6 +3,8 @@
  * @author Mygento
  * @copyright See COPYING.txt for license details.
  * @package Mygento_Payment
+ *
+ * @deprecated
  */
 
 namespace Mygento\Payment\Model;
