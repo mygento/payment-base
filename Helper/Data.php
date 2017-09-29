@@ -16,23 +16,6 @@ class Data extends \Mygento\Base\Helper\Data
 
     protected $_code = 'payment';
 
-    public function __construct(
-        \Magento\Framework\App\Helper\Context $context,
-        \Mygento\Base\Model\Logger\LoggerFactory $loggerFactory,
-        \Mygento\Base\Model\Logger\HandlerFactory $handlerFactory,
-        \Magento\Framework\Encryption\Encryptor $encryptor,
-        \Magento\Framework\HTTP\Client\Curl $curl
-    ) {
-
-        parent::__construct(
-            $context,
-            $loggerFactory,
-            $handlerFactory,
-            $encryptor,
-            $curl
-        );
-    }
-
     /**
      *
      * @param integer $orderId
