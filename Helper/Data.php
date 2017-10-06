@@ -102,13 +102,13 @@ class Data extends \Mygento\Base\Helper\Data
     }
 
     /**
-     *
-     * @param string $configPath
+     * @param string $path
      * @return mixed
      */
     public function getConfig($path)
     {
-        return parent::getConfig('payment/' . $this->_code . '/' . $path);
+        $scope = $this->_code === 'payment' ? 'mygento' : 'payment';
+        return parent::getConfig($scope. '/' . $this->_code . '/' . $path);
     }
 
     public function genHash($orderId)
