@@ -41,6 +41,7 @@ class Transaction extends \Magento\Framework\App\Helper\AbstractHelper
         $payment->setTransactionId($transactionId);
         $payment->setIsTransactionClosed(0);
         $payment->registerAuthorizationNotification($amount);
+        $payment->setAmountAuthorized($amount);
 
         $order->save();
 
