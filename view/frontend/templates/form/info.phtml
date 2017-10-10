@@ -9,7 +9,9 @@
     <dt class="title"><?php echo $block->escapeHtml($block->getMethod()->getTitle()) ?></dt>
 </dl>
 <p>
-    <?php if (!$this->isPaid()): ?>
+    <?php if ($this->isAuthorized()): ?>
+        <?php echo $block->escapeHtml(__('Order has authorized sum')); ?>
+    <?php elseif (!$this->isPaid() && !$this->isAuthorized()): ?>
         <a target="_blank" href="<?php echo $block->getPaylink(); ?>">
             <?php echo $block->escapeHtml(__('Pay order')); ?>
         </a>

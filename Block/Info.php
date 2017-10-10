@@ -45,9 +45,15 @@ class Info extends \Magento\Payment\Block\Info
     public function isPaid()
     {
         $order = $this->getOrder();
-        if ($order->hasInvoices() && !$order->hasCreditmemos()) {
-            return true;
-        }
-        return false;
+        return $order->hasInvoices() && !$order->hasCreditmemos();
+    }
+
+    public function isAuthorized()
+    {
+        $payment = $this->getOrder()->getPayment();
+        return $payment->getAuthorizationTransaction() &&
+            (bool)$payment->getAmountAuthorized() &&
+            !(bool)$payment->getAmountPaid() &&
+            !(int)$payment->getAuthorizationTransaction()->getIsClosed();
     }
 }

@@ -32,7 +32,6 @@ class Adapter extends \Magento\Payment\Model\Method\Adapter
      */
     protected $paymentDataObjectFactory;
 
-
     /**
      * Adapter constructor.
      * @param ManagerInterface $eventManager
