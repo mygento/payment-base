@@ -13,7 +13,6 @@ namespace Mygento\Payment\Helper;
 class Data extends \Mygento\Base\Helper\Data
 {
     /* @var string */
-
     protected $_code = 'payment';
 
     /**
@@ -84,9 +83,8 @@ class Data extends \Mygento\Base\Helper\Data
     }
 
     /**
-     *
-     * @param type $link
-     * @return void
+     * @param string $link
+     * @return int|bool
      */
     public function decodeId($link)
     {
@@ -111,6 +109,10 @@ class Data extends \Mygento\Base\Helper\Data
         return parent::getConfig($scope. '/' . $this->_code . '/' . $path);
     }
 
+    /**
+     * @param string $orderId
+     * @return string
+     */
     public function genHash($orderId)
     {
         return strtr(base64_encode(microtime() . $orderId . rand(1, 1048576)), '+/=', '-_,');
