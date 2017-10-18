@@ -12,8 +12,8 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     protected function _construct()
     {
         $this->_init(
-            'Mygento\Payment\Model\Keys',
-            'Mygento\Payment\Model\ResourceModel\Keys'
+            \Mygento\Payment\Model\Keys::class,
+            \Mygento\Payment\Model\ResourceModel\Keys::class
         );
     }
 }

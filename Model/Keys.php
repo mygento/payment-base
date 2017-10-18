@@ -12,6 +12,6 @@ class Keys extends \Magento\Framework\Model\AbstractModel
 
     protected function _construct()
     {
-        $this->_init('Mygento\Payment\Model\ResourceModel\Keys');
+        $this->_init(\Mygento\Payment\Model\ResourceModel\Keys::class);
     }
 }
