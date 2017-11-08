@@ -109,6 +109,11 @@ class Data extends \Mygento\Base\Helper\Data
         return parent::getConfig($scope. '/' . $this->_code . '/' . $path);
     }
 
+    protected function getDebugConfigPath()
+    {
+        return 'debug';
+    }
+
     /**
      * @param string $orderId
      * @return string
