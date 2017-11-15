@@ -1,7 +1,7 @@
 {
   "name": "mygento/payment",
   "type": "magento2-module",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "license": "OSL-3.0",
   "homepage": "https://github.com/mygento/payment-base",
   "description": "Mygento Payment Base",
@@ -27,7 +27,7 @@
     "magento/module-sales": "101.*",
     "magento/module-quote": "101.*",
     "magento/module-checkout": "100.*",
-    "mygento/base": "^2.2.2"
+    "mygento/base": "^2.2.4"
   },
   "require-dev": {
     "mygento/coding-standard": "2.*",
