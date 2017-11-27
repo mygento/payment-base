@@ -7,6 +7,8 @@
 
 namespace Mygento\Payment\Block;
 
+use Magento\Sales\Model\Order;
+
 class Info extends \Magento\Payment\Block\Info
 {
 
@@ -42,12 +44,44 @@ class Info extends \Magento\Payment\Block\Info
         return $this->_helper->getCode();
     }
 
+    /**
+     * @return bool
+     */
     public function isPaid()
     {
         $order = $this->getOrder();
         return $order->hasInvoices() && !$order->hasCreditmemos();
     }
 
+    /**
+     * @return bool
+     */
+    public function isComplete()
+    {
+        $state = $this->getOrder()->getState();
+        if ($this->getOrder()->isCanceled() ||
+            $state === Order::STATE_COMPLETE ||
+            $state === Order::STATE_CLOSED
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canShowPayLink()
+    {
+        if (!$this->isPaid() || !$this->isAuthorized()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
     public function isAuthorized()
     {
         $payment = $this->getOrder()->getPayment();

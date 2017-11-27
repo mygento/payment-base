@@ -18,7 +18,7 @@ class Data extends \Mygento\Base\Helper\Data
     /**
      * @var \Mygento\Payment\Model\KeysFactory
      */
-    protected $_modelKeys;
+    protected $modelKeys;
 
     /**
      * Data constructor.
@@ -39,7 +39,7 @@ class Data extends \Mygento\Base\Helper\Data
         \Magento\Framework\HTTP\Client\Curl $curl,
         \Magento\Catalog\Model\ProductRepository $productRepository
     ) {
-        $this->_modelKeys = $modelKeys;
+        $this->modelKeys = $modelKeys;
         parent::__construct(
             $context,
             $loggerFactory,
@@ -58,7 +58,7 @@ class Data extends \Mygento\Base\Helper\Data
      */
     public function getLink($orderId)
     {
-        $collection = $this->_modelKeys->create()->getCollection();
+        $collection = $this->modelKeys->create()->getCollection();
         $collection->addFieldToFilter('order_id', $orderId);
         $collection->addFieldToFilter('code', $this->_code);
         if ($collection->getSize() > 0) {
@@ -69,7 +69,7 @@ class Data extends \Mygento\Base\Helper\Data
             ]);
         }
         $key = $this->genHash($orderId);
-        $newKeyModel = $this->_modelKeys->create();
+        $newKeyModel = $this->modelKeys->create();
         $newKeyModel->setData([
             'hkey' => $key,
             'code' => $this->_code,
@@ -78,6 +78,7 @@ class Data extends \Mygento\Base\Helper\Data
         $newKeyModel->save();
         return $this->_urlBuilder->getUrl($this->_code.'/payment/capture/', [
             '_secure' => true,
+            '_nosid' => true,
             'order' => $key
         ]);
     }
@@ -88,7 +89,7 @@ class Data extends \Mygento\Base\Helper\Data
      */
     public function decodeId($link)
     {
-        $keysModel = $this->_modelKeys->create();
+        $keysModel = $this->modelKeys->create();
         $collection = $keysModel->getCollection();
         $collection->addFieldToFilter('hkey', $link);
         $collection->addFieldToFilter('code', $this->_code);
