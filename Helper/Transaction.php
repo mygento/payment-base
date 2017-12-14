@@ -112,7 +112,7 @@ class Transaction extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $this->helper->addLog('seaching for transaction: '. $transactionId
             . ' '. $paymentId .' ' . $orderId);
-        $transaction = $this->_transactionRepo->getByTransactionId(
+        $transaction = $this->transactionRepo->getByTransactionId(
             $transactionId,
             $paymentId,
             $orderId
