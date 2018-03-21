@@ -73,10 +73,10 @@ class Info extends \Magento\Payment\Block\Info
      */
     public function canShowPayLink()
     {
-        if (!$this->isPaid() || !$this->isAuthorized()) {
-            return true;
+        if ($this->isPaid() || $this->isAuthorized()) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     /**
